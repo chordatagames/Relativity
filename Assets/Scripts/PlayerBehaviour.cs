@@ -4,9 +4,12 @@ using System.Collections;
 public class PlayerBehaviour : MonoBehaviour
 {
 	public float gravityConstant = 1.0f;
+	public float timeDistortionConstant = 1.0f;
 	public Vector2 initialSpeed = new Vector2();
 
 	GameObject[] attractors;
+	float _time = 0.0f;
+	public float time {get{return _time;}}
 
 	void Start ()
 	{
@@ -14,9 +17,30 @@ public class PlayerBehaviour : MonoBehaviour
 		attractors = GameObject.FindGameObjectsWithTag("Attractor");
 	}
 
+	void Update ()
+	{
+		UpdateWorldTimeDilationFactor();
+		DoLocalTime ();
+	}
+
 	void FixedUpdate ()
 	{
 		DoGravity();
+	}
+
+
+
+	//
+	// Methods called from above
+	//
+	void UpdateWorldTimeDilationFactor ()
+	{
+		World.timeDilationFactor = 1 + GetGravityForce().magnitude * timeDistortionConstant;
+	}
+
+	void DoLocalTime()
+	{
+		_time += Time.deltaTime;
 	}
 
 	void DoGravity ()

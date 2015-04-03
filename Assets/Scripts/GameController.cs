@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+	public RectTransform timePanel;
+
 	public Mode mode;
 	public bool InPlayMode { get { return (mode == Mode.PLAY); } }
-
+	
 	public enum Mode
 	{
 		SPAWNING,
@@ -13,12 +16,12 @@ public class GameController : MonoBehaviour
 		TRANSFORMING,
 		PLAY
 	}
-
+	
 	void Start()
 	{
 		EnterSpawnMode();
 	}
-
+	
 	public void EnterSpawnMode()
 	{
 		mode = Mode.SPAWNING;
@@ -40,4 +43,10 @@ public class GameController : MonoBehaviour
 		Time.timeScale = 0;
 	}
 
+	void Update ()
+	{
+		timePanel.transform.FindChild ("World Time").GetComponent<Text> ().text = World.time.ToString();
+		timePanel.transform.FindChild ("Local Time").GetComponent<Text> ().text = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>().time.ToString();
+		World.PassTime();
+	}
 }
