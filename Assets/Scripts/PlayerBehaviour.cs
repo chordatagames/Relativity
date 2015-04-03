@@ -19,7 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 	void Update ()
 	{
-		DoWorldTime();
+		UpdateWorldTimeDilationFactor();
 		DoLocalTime ();
 	}
 
@@ -30,11 +30,12 @@ public class PlayerBehaviour : MonoBehaviour
 
 
 
-	
-	void DoWorldTime ()
+	//
+	// Methods called from above
+	//
+	void UpdateWorldTimeDilationFactor ()
 	{
-		float t = Time.deltaTime * (1 + GetGravityForce().magnitude * timeDistortionConstant);
-		World.AddTime(t);
+		World.timeDilationFactor = 1 + GetGravityForce().magnitude * timeDistortionConstant;
 	}
 
 	void DoLocalTime()

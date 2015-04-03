@@ -10,5 +10,6 @@ public class GameController : MonoBehaviour
 	{
 		timePanel.transform.FindChild ("World Time").GetComponent<Text> ().text = World.time.ToString();
 		timePanel.transform.FindChild ("Local Time").GetComponent<Text> ().text = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>().time.ToString();
+		World.PassTime();
 	}
 }
