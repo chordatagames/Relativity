@@ -15,18 +15,10 @@ public sealed class GizmoHandle : MonoBehaviour
 		Scale
 	}
 
-	public 	GizmoType 	type 	= GizmoType.Position;
-	private bool 		holding = false;
-	private Vector3		scaleCenter;
+	public static GizmoType type = GizmoType.Position;
+	private bool holding = false;
+	private Vector3	scaleCenter;
 
-
-
-
-	public void SetType(GizmoType type)
-	{
-		this.type = type;
-	}
-	
 	public void OnPress()
 	{
 		scaleCenter = Camera.main.ScreenToWorldPoint(Input.mousePosition);
