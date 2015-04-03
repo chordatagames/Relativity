@@ -5,9 +5,12 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
 	public RectTransform timePanel;
+	public Button startingModeButton;
 
 	public static Mode mode;
 	public bool InPlayMode { get { return (mode == Mode.PLAY); } }
+
+	public GameObject blackHolePrefab;
 	
 	public enum Mode
 	{
@@ -19,7 +22,8 @@ public class GameController : MonoBehaviour
 	
 	void Start()
 	{
-		EnterSpawnMode();
+		PauseGame();
+		startingModeButton.onClick.Invoke();
 	}
 
 	public void PauseGame()
@@ -31,19 +35,36 @@ public class GameController : MonoBehaviour
 		Time.timeScale = 1;
 	}
 
-	public void EnterSpawnMode()
+	public void TogglePlayMode()
 	{
-		mode = Mode.SPAWNING;
-		PauseGame();
+		if (InPlayMode)
+		{
+			ResetScene();
+			EnterSpawnMode();
+		}
+		else
+		{
+			EnterPlayMode();
+		}
 	}
+
 	public void EnterPlayMode()
 	{
 		mode = Mode.PLAY;
+		GizmoModeNone();
 		UnpauseGame();
+	}
+
+	public void EnterSpawnMode()
+	{
+		mode = Mode.SPAWNING;
+		GizmoModeNone();
+		PauseGame();
 	}
 	public void EnterBulldozerMode()
 	{
 		mode = Mode.REMOVING;
+		GizmoModeNone();
 		PauseGame();
 	}
 	public void EnterTransformMode()
@@ -51,21 +72,49 @@ public class GameController : MonoBehaviour
 		mode = Mode.TRANSFORMING;
 		PauseGame();
 	}
+	
+	public void GizmoModeNone()
+	{
+		GizmoHandle.type = GizmoHandle.GizmoType.NONE;
+	}
 	public void GizmoModeScale()
 	{
-		GizmoHandle.type = GizmoHandle.GizmoType.Scale;
+		GizmoHandle.type = GizmoHandle.GizmoType.SCALE;
 		EnterTransformMode();
 	}
 	public void GizmoModePosition()
 	{
-		GizmoHandle.type = GizmoHandle.GizmoType.Position;
+		GizmoHandle.type = GizmoHandle.GizmoType.POSITION;
 		EnterTransformMode();
+	}
+
+	public void ResetScene()
+	{
+
 	}
 
 	void Update ()
 	{
 		timePanel.transform.FindChild ("World Time").GetComponent<Text> ().text = World.time.ToString();
-		timePanel.transform.FindChild ("Local Time").GetComponent<Text> ().text = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>().time.ToString();
+		timePanel.transform.FindChild ("Local Time").GetComponent<Text> ().text = GameObject.FindGameObjectWithTag("Ship").GetComponent<PlayerBehaviour>().time.ToString();
 		World.PassTime();
+
+		if(Input.GetMouseButtonDown(0))
+		{
+			switch(mode)
+			{
+			case Mode.REMOVING:
+				
+				break;
+			case Mode.SPAWNING:
+				Vector3 spawnPoint = Grid.Gridify(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+				spawnPoint.z = 0;
+				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
+				blackHole.transform.position = spawnPoint;
+				WorldScene.AddAttractor(blackHole);
+				break;
+			}
+		}
+
 	}
 }

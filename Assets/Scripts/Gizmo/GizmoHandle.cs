@@ -7,16 +7,19 @@ public sealed class GizmoHandle : MonoBehaviour
 	public Transform gizmoParent; //The object to transform
 
 	public float gizmoSensitivity = 2.0f;
+
 	[HideInInspector()]
 	public bool needUpdate = false;
+
 	[HideInInspector()]
 	public enum GizmoType 
 	{
-		Position,
-		Scale
+		POSITION,
+		SCALE,
+		NONE
 	}
 
-	public static GizmoType type = GizmoType.Position;
+	public static GizmoType type = GizmoType.POSITION;
 
 	private bool holding = false;
 	private Vector3	scaleCenter;
@@ -38,7 +41,6 @@ public sealed class GizmoHandle : MonoBehaviour
 	void Awake()
 	{
 		renderer = GetComponent<CanvasRenderer>();
-
 	}
 
 	void Update() 
@@ -51,12 +53,14 @@ public sealed class GizmoHandle : MonoBehaviour
 		{
 			switch (type)
 			{
-			case GizmoType.Position:
+			case GizmoType.POSITION:
 				gizmoParent.transform.position = Grid.Gridify(mousePos);
 				break;
-			case GizmoType.Scale:
+			case GizmoType.SCALE:
 				gizmoParent.localScale = Grid.Gridify(Vector3.one + Vector3.one * (mousePos - scaleCenter).sqrMagnitude * gizmoSensitivity);
 				gizmoParent.GetComponent<BlackHoleBehaviour>().mass = gizmoParent.localScale.sqrMagnitude;
+				break;
+			case GizmoType.NONE:
 				break;
 			}
 		}

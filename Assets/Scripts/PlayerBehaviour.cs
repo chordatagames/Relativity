@@ -7,14 +7,14 @@ public class PlayerBehaviour : MonoBehaviour
 	public float timeDistortionConstant = 8.0f;
 	public Vector2 initialSpeed = new Vector2();
 
-	GameObject[] attractors;
 	float _time = 0.0f;
 	public float time {get{return _time;}}
 
 	void Start ()
 	{
+		WorldScene.AddShip(gameObject);
 		GetComponent<Rigidbody2D>().AddForce(initialSpeed * GetComponent<Rigidbody2D>().mass * 60.0f);
-		attractors = GameObject.FindGameObjectsWithTag("Attractor");
+
 	}
 
 	void Update ()
@@ -51,7 +51,7 @@ public class PlayerBehaviour : MonoBehaviour
 	Vector2 GetGravityForce ()
 	{
 		Vector2 force = new Vector2 ();
-		foreach (GameObject attractor in attractors)
+		foreach (GameObject attractor in WorldScene.Attractors)
 		{
 			force	+= (Vector2)(attractor.transform.position - transform.position).normalized
 					* gravityConstant
