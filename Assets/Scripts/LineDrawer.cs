@@ -41,7 +41,7 @@ public class LineDrawer : MonoBehaviour
 		}
 	}
 
-	// shrug
+	// lmao
 	private void CreateLineMaterial() {
 		if (!lineMaterial) {
 			lineMaterial = new Material("Shader \"Lines/Colored Blended\" {" + "SubShader { Pass { " + "    Blend SrcAlpha OneMinusSrcAlpha " + "    ZWrite Off Cull Off Fog { Mode Off } " + "    BindChannels {" + "      Bind \"vertex\", vertex Bind \"color\", color }" + "} } }");
@@ -63,11 +63,11 @@ public class LineDrawer : MonoBehaviour
 			GL.Begin(GL.LINES);
 			GL.Color(Color.blue);
 
-			for (int i = 0; i < lines.Count-1; i++)
+			for (int i = 1; i < lines.Count-1; i++)
 			{
-				if (lines[i].timeDilation > 5.0f) GL.Color(Color.red);
-				else GL.Color(Color.green);
+				GL.Color(new Color((1f/10f)*lines[i].timeDilation,1-(1f/10f)*lines[i].timeDilation,0));
 
+				GL.Vertex(lines[i-1].position);
 				GL.Vertex(lines[i].position);
 			}
 			
