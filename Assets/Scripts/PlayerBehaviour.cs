@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerBehaviour : MonoBehaviour
 {
 	public float gravityConstant = 1.0f;
-	public float timeDistortionConstant = 1.0f;
+	public float timeDistortionConstant = 8.0f;
 	public Vector2 initialSpeed = new Vector2();
 
 	GameObject[] attractors;
