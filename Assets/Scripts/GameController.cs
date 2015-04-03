@@ -6,7 +6,7 @@ public class GameController : MonoBehaviour
 {
 	public RectTransform timePanel;
 
-	public Mode mode;
+	public static Mode mode;
 	public bool InPlayMode { get { return (mode == Mode.PLAY); } }
 	
 	public enum Mode
@@ -21,26 +21,45 @@ public class GameController : MonoBehaviour
 	{
 		EnterSpawnMode();
 	}
-	
+
+	public void PauseGame()
+	{
+		Time.timeScale = 0;
+	}
+	public void UnpauseGame()
+	{
+		Time.timeScale = 1;
+	}
+
 	public void EnterSpawnMode()
 	{
 		mode = Mode.SPAWNING;
-		Time.timeScale = 0;
+		PauseGame();
 	}
 	public void EnterPlayMode()
 	{
 		mode = Mode.PLAY;
-		Time.timeScale = 1;
+		UnpauseGame();
 	}
 	public void EnterBulldozerMode()
 	{
 		mode = Mode.REMOVING;
-		Time.timeScale = 0;
+		PauseGame();
 	}
 	public void EnterTransformMode()
 	{
 		mode = Mode.TRANSFORMING;
-		Time.timeScale = 0;
+		PauseGame();
+	}
+	public void GizmoModeScale()
+	{
+		GizmoHandle.type = GizmoHandle.GizmoType.Scale;
+		EnterTransformMode();
+	}
+	public void GizmoModePosition()
+	{
+		GizmoHandle.type = GizmoHandle.GizmoType.Position;
+		EnterTransformMode();
 	}
 
 	void Update ()
