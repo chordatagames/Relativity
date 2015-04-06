@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public static class WorldScene
 {
-	public static 	Dictionary<Vector3, GameObject> 	attractors = Dictionary<Vector3, GameObject>();
+	public static 	Dictionary<Vector3, GameObject> 	attractors = new Dictionary<Vector3, GameObject>();
 
-	public static 	Dictionary<Vector3, GameObject> 	ships = Dictionary<Vector3, GameObject>();
+	public static 	Dictionary<Vector3, GameObject> 	ships = new Dictionary<Vector3, GameObject>();
 
 	public static void AddAttractor(GameObject attractor)
 	{

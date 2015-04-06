@@ -51,7 +51,8 @@ public class PlayerBehaviour : MonoBehaviour
 	Vector2 GetGravityForce ()
 	{
 		Vector2 force = new Vector2 ();
-		foreach (GameObject attractor in WorldScene.Attractors)
+
+		foreach (GameObject attractor in WorldScene.attractors.Values)
 		{
 			force	+= (Vector2)(attractor.transform.position - transform.position).normalized
 					* gravityConstant
