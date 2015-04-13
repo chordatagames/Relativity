@@ -1,20 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerBehaviour : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour, IGameEditable
 {
+	public GameEditableValues Values { get; set; }
+
 	public float gravityConstant = 1.0f;
 	public float timeDistortionConstant = 8.0f;
 	public Vector2 initialSpeed = new Vector2();
 
 	float _time = 0.0f;
-	public float time {get{return _time;}}
+	public float time {get{return _time;} set{_time = value;}}
+
+	private Rigidbody2D rigidbody;
 
 	void Start ()
 	{
-		WorldScene.AddShip(gameObject);
-		GetComponent<Rigidbody2D>().AddForce(initialSpeed * GetComponent<Rigidbody2D>().mass * 60.0f);
+		WorldScene.Instance.dataEntries.Add(this);
+		rigidbody = GetComponent<Rigidbody2D>();
+		rigidbody.AddForce(initialSpeed * GetComponent<Rigidbody2D>().mass * 60.0f); //TODO should really be called when the play-button ingame is pressed.
+	}
 
+	public void SetValues()
+	{
+		Values = new GameEditableValues(gameObject);
+	}
+
+	public void ResetValues()
+	{
+		transform.position 		= Values.position;
+		transform.rotation		= Quaternion.Euler(Values.rotation);
+		transform.localScale 	= Values.scale;
+		rigidbody.velocity 		= Values.velocity;
 	}
 
 	void Update ()
@@ -52,7 +69,7 @@ public class PlayerBehaviour : MonoBehaviour
 	{
 		Vector2 force = new Vector2 ();
 
-		foreach (GameObject attractor in WorldScene.attractors.Values)
+		foreach (GameObject attractor in GameObject.FindGameObjectsWithTag("Attractor"))
 		{
 			force	+= (Vector2)(attractor.transform.position - transform.position).normalized
 					* gravityConstant

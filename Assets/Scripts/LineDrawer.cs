@@ -39,6 +39,10 @@ public class LineDrawer : MonoBehaviour
 				count = waitTime;
 			}
 		}
+		else
+		{
+			lines.Clear();
+		}
 	}
 
 	// lmao

@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
 {
+	public static GameController control;
+
 	public RectTransform timePanel;
 	public Button startingModeButton;
 
@@ -19,10 +21,27 @@ public class GameController : MonoBehaviour
 		TRANSFORMING,
 		PLAY
 	}
+	/// <summary>
+	/// Awake calls for this instance. 
+	/// MonoBehaviour singleton pattern
+	/// </summary>
+	void Awake()
+	{
+		if(control == null)
+		{
+			DontDestroyOnLoad(gameObject);
+			control = this;
+		}
+		else if(control != this)
+		{
+			Destroy(gameObject);
+		}
+		PauseGame();
 	
+	}
+
 	void Start()
 	{
-		PauseGame();
 		startingModeButton.onClick.Invoke();
 	}
 
@@ -39,11 +58,12 @@ public class GameController : MonoBehaviour
 	{
 		if (InPlayMode)
 		{
-			ResetScene();
-			EnterSpawnMode();
+			WorldScene.Instance.ResetValues();
+			GizmoModePosition();
 		}
 		else
 		{
+			WorldScene.Instance.SetValues();
 			EnterPlayMode();
 		}
 	}
@@ -53,6 +73,7 @@ public class GameController : MonoBehaviour
 		mode = Mode.PLAY;
 		GizmoModeNone();
 		UnpauseGame();
+		//SAVE POSITIONS OF BLACK HOLES
 	}
 
 	public void EnterSpawnMode()
@@ -88,11 +109,6 @@ public class GameController : MonoBehaviour
 		EnterTransformMode();
 	}
 
-	public void ResetScene()
-	{
-
-	}
-
 	void Update ()
 	{
 		timePanel.transform.FindChild ("World Time").GetComponent<Text> ().text = World.time.ToString();
@@ -107,11 +123,10 @@ public class GameController : MonoBehaviour
 				
 				break;
 			case Mode.SPAWNING:
-				Vector3 spawnPoint = Grid.Gridify(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+				Vector3 spawnPoint = /*Grid.Gridify(*/Camera.main.ScreenToWorldPoint(Input.mousePosition)/*)*/;
 				spawnPoint.z = 0;
 				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
 				blackHole.transform.position = spawnPoint;
-				WorldScene.AddAttractor(blackHole);
 				break;
 			}
 		}

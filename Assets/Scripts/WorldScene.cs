@@ -2,26 +2,67 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public static class WorldScene
+public class WorldScene
 {
-	public static 	Dictionary<Vector3, GameObject> 	attractors = new Dictionary<Vector3, GameObject>();
 
-	public static 	Dictionary<Vector3, GameObject> 	ships = new Dictionary<Vector3, GameObject>();
+	// Singleton pattern assignment.
+	private static WorldScene instance;
+	public static WorldScene Instance
+	{
+		get 
+		{
+			if (instance == null)
+			{
+				instance = new WorldScene();
+			}
+			return instance;
+		}
+	}
 
-	public static void AddAttractor(GameObject attractor)
+	public List<IGameEditable> dataEntries = new List<IGameEditable>();
+
+	public void SetValues()
 	{
-		attractors.Add(attractor.transform.position, attractor);
+		foreach(IGameEditable editable in dataEntries.ToArray())
+		{
+			editable.SetValues();
+		}
 	}
-	public static void RemoveAttractor(GameObject attractor)
+
+	public void ResetValues()
 	{
-		attractors.Remove(attractor.transform.position);
+		foreach(IGameEditable editable in dataEntries.ToArray())
+		{
+			editable.ResetValues();
+		}
 	}
-	public static void AddShip(GameObject ship)
+}
+
+public interface IGameEditable
+{
+	GameEditableValues Values {get; set;}
+
+	void SetValues();
+	void ResetValues();
+}
+
+public struct GameEditableValues
+{
+	public Vector3 position, rotation, scale;
+	public Vector2 velocity;
+
+	public GameEditableValues(GameObject gameObject)
 	{
-		ships.Add(ship.transform.position,ship);
-	}
-	public static void RemoveShip(GameObject ship)
-	{
-		ships.Remove(ship.transform.position);
+		position 	= gameObject.transform.position;
+		rotation 	= gameObject.transform.rotation.eulerAngles;
+		scale 		= gameObject.transform.localScale;
+		if ( gameObject.GetComponent<Rigidbody2D>() )
+		{
+			velocity = gameObject.GetComponent<Rigidbody2D>().velocity;
+		}
+		else
+		{
+			velocity = Vector2.zero;
+		}
 	}
 }
