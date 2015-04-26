@@ -14,6 +14,8 @@ public class PlayerBehaviour : MonoBehaviour, IGameEditable
 
 	private Rigidbody2D rigidbody;
 
+	Vector2 timeDilationForce;
+
 	void Start ()
 	{
 		WorldScene.Instance.dataEntries.Add(this);
@@ -42,17 +44,20 @@ public class PlayerBehaviour : MonoBehaviour, IGameEditable
 
 	void FixedUpdate ()
 	{
-		DoGravity();
+		timeDilationForce = Vector2.zero;
 	}
-
-
 
 	//
 	// Methods called from above
 	//
 	void UpdateWorldTimeDilationFactor ()
 	{
-		World.timeDilationFactor = 1 + GetGravityForce().magnitude * timeDistortionConstant;
+		World.timeDilationFactor = 1 + timeDilationForce.magnitude * timeDistortionConstant;
+	}
+
+	public void addTimeDilationForce (Vector2 force)
+	{
+		timeDilationForce += force;
 	}
 
 	void DoLocalTime()

@@ -31,4 +31,19 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 		transform.localScale 	= Values.scale;
 	}
 
+	void OnTriggerStay2D (Collider2D col)
+	{
+		if (col.tag == "Ship")
+		{
+			Debug.Log("Pulling ship");
+			Rigidbody2D colrig = col.transform.GetComponent<Rigidbody2D> ();
+			Vector2 force = (Vector2)(transform.position - col.transform.position).normalized
+				* col.transform.GetComponent<PlayerBehaviour> ().gravityConstant
+				* mass
+				* colrig.mass
+				* Mathf.Pow ((transform.position - col.transform.position).magnitude, -2);
+			colrig.AddForce(force);
+			col.transform.GetComponent<PlayerBehaviour>().addTimeDilationForce(force);
+		}
+	}
 }
