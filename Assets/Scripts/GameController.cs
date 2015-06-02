@@ -123,7 +123,7 @@ public class GameController : MonoBehaviour
 				
 				break;
 			case Mode.SPAWNING:
-				Vector3 spawnPoint = /*Grid.Gridify(*/Camera.main.ScreenToWorldPoint(Input.mousePosition)/*)*/;
+				Vector3 spawnPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				spawnPoint.z = 0;
 				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
 				blackHole.transform.position = spawnPoint;

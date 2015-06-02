@@ -8,8 +8,14 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 	public float mass;
 	public float rotationSpeed;
 
+	CircleCollider2D areaOfEffect;
+	Transform areaOfEffectUI;
+
 	void Start()
 	{
+		areaOfEffect = GetComponent<CircleCollider2D> ();
+		areaOfEffectUI = transform.FindChild("Canvas").FindChild("Area of Effect");
+		UpdateAreaOfEffectSize();
 		WorldScene.Instance.dataEntries.Add(this);
 	}
 
@@ -45,5 +51,10 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 			colrig.AddForce(force);
 			col.transform.GetComponent<PlayerBehaviour>().addTimeDilationForce(force);
 		}
+	}
+
+	void UpdateAreaOfEffectSize()
+	{
+		areaOfEffectUI.localScale = new Vector3 (areaOfEffect.radius * 2, areaOfEffect.radius * 2, 0);
 	}
 }
