@@ -7,13 +7,14 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 
 	public float mass;
 	public float rotationSpeed;
+	public float areaOfEffectRadius;
 
 	CircleCollider2D areaOfEffect;
 	Transform areaOfEffectUI;
 
 	void Start()
 	{
-		areaOfEffect = GetComponent<CircleCollider2D> ();
+		areaOfEffect = GetComponent<CircleCollider2D>();
 		areaOfEffectUI = transform.FindChild("Canvas").FindChild("Area of Effect");
 		UpdateAreaOfEffectSize();
 		WorldScene.Instance.dataEntries.Add(this);
@@ -22,6 +23,7 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 	void Update ()
 	{
 		Angles.RotateTransform(transform, Time.deltaTime * World.timeDilationFactor * rotationSpeed);
+		UpdateAreaOfEffectSize ();
 	}
 
 	
@@ -41,7 +43,6 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 	{
 		if (col.tag == "Ship")
 		{
-			Debug.Log("Pulling ship");
 			Rigidbody2D colrig = col.transform.GetComponent<Rigidbody2D> ();
 			Vector2 force = (Vector2)(transform.position - col.transform.position).normalized
 				* col.transform.GetComponent<PlayerBehaviour> ().gravityConstant
@@ -55,6 +56,7 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 
 	void UpdateAreaOfEffectSize()
 	{
-		areaOfEffectUI.localScale = new Vector3 (areaOfEffect.radius * 2, areaOfEffect.radius * 2, 0);
+		areaOfEffect.radius = areaOfEffectRadius;
+		areaOfEffectUI.localScale = new Vector3 (areaOfEffectRadius * 2, areaOfEffectRadius * 2, 0);
 	}
 }

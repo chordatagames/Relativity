@@ -3,9 +3,10 @@ using System.Collections;
 
 public class MainMenuManager : MonoBehaviour
 {
-	public GameObject LevelSelectButton;
-	public GameObject QuitGameButton;
-	public GameObject MainMenuButton;
+	public GameObject levelSelectButton;
+	public GameObject quitGameButton;
+	public GameObject mainMenuButton;
+	public GameObject[] levelButtons;
 
 	private UIScreen currentScreen;
 
@@ -18,16 +19,24 @@ public class MainMenuManager : MonoBehaviour
 	{
 		if (currentScreen == UIScreen.MainMenu)
 		{
-			LevelSelectButton.SetActive(true);
-			QuitGameButton.SetActive(true);
-			MainMenuButton.SetActive(false);
+			levelSelectButton.SetActive(true);
+			quitGameButton.SetActive(true);
+			mainMenuButton.SetActive(false);
+			foreach (GameObject levelButton in levelButtons)
+			{
+				levelButton.SetActive(false);
+			}
 		}
 
 		else if (currentScreen == UIScreen.LevelSelect)
 		{
-			LevelSelectButton.SetActive(false);
-			QuitGameButton.SetActive(false);
-			MainMenuButton.SetActive(true);
+			levelSelectButton.SetActive(false);
+			quitGameButton.SetActive(false);
+			mainMenuButton.SetActive(true);
+			foreach (GameObject levelButton in levelButtons)
+			{
+				levelButton.SetActive(true);
+			}
 		}
 	}
 
@@ -43,7 +52,14 @@ public class MainMenuManager : MonoBehaviour
 
 	public void QuitButtonClicked ()
 	{
-		Application.Quit ();
+		Application.Quit();
+	}
+
+	public void LevelButtonClicked (int level)
+	{
+		string levelNameString = "Level " + level.ToString ();
+		Debug.Log ("Loading " + levelNameString);
+		Application.LoadLevel (levelNameString);
 	}
 
 	public enum UIScreen
