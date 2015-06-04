@@ -3,11 +3,13 @@ using System.Collections;
 
 public class Grid : MonoBehaviour
 {
-	public static float gridSize = 1f;
+	public static float gridSize = 0.5f;
 
 	public static Vector2 Gridify( Vector2 point )
 	{
-		return new Vector2 ( Mathf.Round(point.x/gridSize), Mathf.Round(point.y/gridSize) );
+		float xStep = point.x + gridSize/2;
+		float yStep = point.y + gridSize/2;
+		return new Vector2 ( xStep - (xStep%gridSize),yStep - (yStep%gridSize));
 	}
 
 

@@ -54,7 +54,7 @@ public sealed class GizmoHandle : MonoBehaviour
 			switch (type)
 			{
 			case GizmoType.POSITION:
-				gizmoParent.transform.position = mousePos;//Grid.Gridify(mousePos);
+				gizmoParent.transform.position = Grid.Gridify(mousePos);
 				break;
 			case GizmoType.SCALE:
 				gizmoParent.localScale = Grid.Gridify(Vector3.one + Vector3.one * (mousePos - scaleCenter).sqrMagnitude * gizmoSensitivity);
