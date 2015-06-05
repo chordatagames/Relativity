@@ -1,32 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
-public class Level: MonoBehaviour
+public class Ship : MonoBehaviour
 {
-	public Ship[] ships;
-	
+	public LevelGoal[] shipGoals;
+
 	bool _completed;
 	public bool completed { get { return _completed; } }
-	
+
 	void Update()
 	{
-		foreach (Ship ship in ships)
+		foreach (LevelGoal lg in shipGoals)
 		{
 			if(!_completed)
 			{
 				_completed = true;
-				_completed &= ship.completed;
+				_completed &= lg.completed;
 			}
 			if(_completed)
 			{
-				LevelComplete();
+				ShipComplete();
 			}
 		}
 	}
 
-	void LevelComplete()
+	void ShipComplete()
 	{
-		//Menu-popup
+		Debug.Log("completed!");
 	}
 }

@@ -6,19 +6,22 @@ public class LevelGoal : MonoBehaviour
 	public Vector2 requiredRadius;
 	public Vector2 requiredAge;
 	public Vector2 requiredSpeed;
-	public LevelGoalCondition goalCondition;
+	
 	public GameObject tracking;
+	public LevelGoalCondition goalCondition;
 
+	bool _completed = true;
+	public bool completed { get { return _completed; } }
 
-	bool completed = false;
-	delegate bool GoalCheck( GameObject testing );
+	delegate void GoalCheck( GameObject testing );
 	GoalCheck gc;
+
 	void Start()
 	{
 		//Setup what to test
 		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoal.LevelGoalCondition) ).Length); i+=i )
 		{
-			switch (goalConditionProp.intValue & i) 
+			switch ((int)goalCondition & i) 
 			{
 			case (int)LevelGoal.LevelGoalCondition.AREA:
 				gc += TestArea;
@@ -40,26 +43,35 @@ public class LevelGoal : MonoBehaviour
 		//Perform tests
 		if(gc != null)
 		{
+			//_completed may change goaltesting
 			gc(tracking); //itterate through objects?
+		}
+		if(_completed)
+		{
+			gc = null;
 		}
 	}
 
 	//within min and max range
-	public bool TestArea(GameObject go)
+	public void TestArea(GameObject go)
 	{
-		return (go.transform.position-this.transform.position).magnitude >= this.requiredRadius.x && 
-			(go.transform.position-this.transform.position).magnitude <= this.requiredRadius.y;
+		Debug.Log("Area true!");
+		Debug.Log((go.transform.position-transform.position).magnitude);
+		_completed &= (go.transform.position-transform.position).magnitude > requiredRadius.x && 
+			(go.transform.position-transform.position).magnitude < requiredRadius.y;
 	}
 
-	public bool TestAge(GameObject go)
+	public void TestAge(GameObject go)
 	{
-		return (go.transform.position-this.transform.position).magnitude >= this.requiredRadius.x && 
-			(go.transform.position-this.transform.position).magnitude <= this.requiredRadius.y;
+		Debug.Log("Age true!");
+		float age = go.GetComponent<PlayerBehaviour>().time;
+		_completed &= age > requiredAge.x && age < requiredAge.y;
 	}
-	public bool TestSpeed(GameObject go)
+	public void TestSpeed(GameObject go)
 	{
-		return (go.transform.position-this.transform.position).magnitude >= this.requiredRadius.x && 
-			(go.transform.position-this.transform.position).magnitude <= this.requiredRadius.y;
+		Debug.Log("Speed true!");
+		float speed = go.GetComponent<Rigidbody2D>().velocity.magnitude;
+		_completed &= speed > requiredSpeed.x && speed < requiredSpeed.y;
 	}
 
 	[System.Flags]
@@ -67,7 +79,6 @@ public class LevelGoal : MonoBehaviour
 	{
 		AGE 	= 1,	//0x00000001
 		AREA	= 2,	//0x00000010
-		SPEED	= 4		//0x00000100
+		SPEED	= 4,	//0x00000100
 	}
 }
-//AGING CLASS?

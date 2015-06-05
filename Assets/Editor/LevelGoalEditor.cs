@@ -22,6 +22,7 @@ public class LevelGoalEditor : Editor
 
 	public override void OnInspectorGUI() 
 	{
+		base.DrawDefaultInspector();
 		// Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
 		serializedObject.Update ();
 
