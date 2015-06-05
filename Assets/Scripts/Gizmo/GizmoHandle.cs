@@ -12,7 +12,7 @@ public sealed class GizmoHandle : MonoBehaviour
 	public bool needUpdate = false;
 
 	[HideInInspector()]
-	public enum GizmoType 
+	public enum GizmoType
 	{
 		POSITION,
 		SCALE,
@@ -32,7 +32,7 @@ public sealed class GizmoHandle : MonoBehaviour
 		holding = true;
 	}
 
-	public void OnUnpress() 
+	public void OnUnpress()
 	{
 		holding = false;
 		needUpdate = true;
@@ -43,7 +43,7 @@ public sealed class GizmoHandle : MonoBehaviour
 		renderer = GetComponent<CanvasRenderer>();
 	}
 
-	void Update() 
+	void Update()
 	{
 		renderer.SetAlpha( (GameController.mode != GameController.Mode.PLAY) ? 1 : 0 );
 		

@@ -7,6 +7,8 @@ public class GameController : MonoBehaviour
 	public static GameController control;
 
 	public RectTransform timePanel;
+	public Text worldTimeUI;
+	public Text localTimeUI;
 	public Button startingModeButton;
 
 	public static Mode mode;
@@ -43,6 +45,8 @@ public class GameController : MonoBehaviour
 	void Start()
 	{
 		startingModeButton.onClick.Invoke();
+		worldTimeUI = timePanel.transform.FindChild ("World Time").GetComponent<Text>();
+		localTimeUI = timePanel.transform.FindChild ("Local Time").GetComponent<Text>();
 	}
 
 	public void PauseGame()
@@ -111,8 +115,8 @@ public class GameController : MonoBehaviour
 
 	void Update ()
 	{
-		timePanel.transform.FindChild ("World Time").GetComponent<Text> ().text = World.time.ToString();
-		timePanel.transform.FindChild ("Local Time").GetComponent<Text> ().text = GameObject.FindGameObjectWithTag("Ship").GetComponent<PlayerBehaviour>().time.ToString();
+		worldTimeUI.text = World.time.ToString();
+		localTimeUI.text = GameObject.FindGameObjectWithTag("Ship").GetComponent<PlayerBehaviour>().time.ToString();
 		World.PassTime();
 
 		if(Input.GetMouseButtonDown(0))
@@ -120,18 +124,16 @@ public class GameController : MonoBehaviour
 			switch(mode)
 			{
 			case Mode.REMOVING:
-				
 				break;
+
 			case Mode.SPAWNING:
-
 				Vector3 spawnPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				spawnPoint = Grid.Gridify3(spawnPoint);
 
-				spawnPoint.z = 0;
 				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
 				blackHole.transform.position = spawnPoint;
 				break;
 			}
 		}
-
 	}
 }
