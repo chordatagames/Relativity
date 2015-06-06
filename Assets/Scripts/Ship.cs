@@ -8,6 +8,14 @@ public class Ship : MonoBehaviour
 	bool _completed;
 	public bool completed { get { return _completed; } }
 
+	void Start()
+	{
+		foreach (LevelGoal lg in shipGoals)
+		{
+			lg.tracking = gameObject;
+		}
+	}
+
 	void Update()
 	{
 		foreach (LevelGoal lg in shipGoals)
