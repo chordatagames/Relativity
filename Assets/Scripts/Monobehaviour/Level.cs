@@ -2,13 +2,14 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Level: MonoBehaviour
+public class Level : MonoBehaviour
 {
 	public Ship[] ships;
-	
+	public int blackholeLimit;
+
 	bool _completed;
 	public bool completed { get { return _completed; } }
-	
+
 	public void UpdateLevel()
 	{
 		foreach (Ship ship in ships)

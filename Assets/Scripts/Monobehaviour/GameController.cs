@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour
 {
@@ -9,13 +11,16 @@ public class GameController : MonoBehaviour
 	public RectTransform timePanel;
 	public Text worldTimeUI;
 	public Text localTimeUI;
+	public Text blackHoleCountUI;
 	public Button startingModeButton;
+	public List<GameObject> blackholeList;
 
 	public static Mode mode;
 	public bool InPlayMode { get { return (mode == Mode.PLAY); } }
 
 	public GameObject blackHolePrefab;
-	
+	public Level level;
+
 	public enum Mode
 	{
 		SPAWNING,
@@ -23,6 +28,7 @@ public class GameController : MonoBehaviour
 		TRANSFORMING,
 		PLAY
 	}
+
 	/// <summary>
 	/// Awake calls for this instance. 
 	/// MonoBehaviour singleton pattern
@@ -45,8 +51,7 @@ public class GameController : MonoBehaviour
 	void Start()
 	{
 		startingModeButton.onClick.Invoke();
-		worldTimeUI = timePanel.transform.FindChild ("World Time").GetComponent<Text>();
-		localTimeUI = timePanel.transform.FindChild ("Local Time").GetComponent<Text>();
+		blackholeList = new List<GameObject>();
 	}
 
 	public void PauseGame()
@@ -124,14 +129,26 @@ public class GameController : MonoBehaviour
 			switch(mode)
 			{
 			case Mode.REMOVING:
+				Vector3 removalPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+				// it stands for black hole ya pervs
+				foreach (GameObject bh in blackholeList)
+					if (bh.transform.position == removalPoint)
+					{
+						blackholeList.Remove(bh);
+						Destroy(bh);
+						blackHoleCountUI.text = blackholeList.Count.ToString();
+					}
 				break;
 
 			case Mode.SPAWNING:
-				Vector3 spawnPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				spawnPoint = Grid.Gridify3(spawnPoint);
+				if (blackholeList.Count >= level.blackholeLimit) break;
+				Vector3 spawnPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
 				blackHole.transform.position = spawnPoint;
+				blackholeList.Add(blackHole);
+				blackHoleCountUI.text = blackholeList.Count.ToString();
 				break;
 			}
 		}
