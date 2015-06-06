@@ -13,23 +13,27 @@ public class LevelGoal : MonoBehaviour
 	bool _completed = true;
 	public bool completed { get { return _completed; } }
 
-	delegate void GoalCheck( GameObject testing );
+	delegate void GoalCheck();
 	GoalCheck gc;
 
 	void Start()
 	{
 		//Setup what to test
-		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoal.LevelGoalCondition) ).Length); i+=i )
+		gc += InitTest;
+		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoalCondition) ).Length); i+=i )
 		{
 			switch ((int)goalCondition & i) 
 			{
-			case (int)LevelGoal.LevelGoalCondition.AREA:
+			case (int)LevelGoalCondition.AREA:
+				Debug.Log("testing area");
 				gc += TestArea;
 				break;
-			case (int)LevelGoal.LevelGoalCondition.AGE:
+			case (int)LevelGoalCondition.AGE:
+				Debug.Log("testing age");
 				gc += TestAge;
 				break;
-			case (int)LevelGoal.LevelGoalCondition.SPEED:
+			case (int)LevelGoalCondition.SPEED:
+				Debug.Log("testing speed");
 				gc += TestSpeed;
 				break;
 			default:
@@ -43,35 +47,39 @@ public class LevelGoal : MonoBehaviour
 		//Perform tests
 		if(gc != null)
 		{
-			//_completed may change goaltesting
-			gc(tracking); //itterate through objects?
+			//_completed may change in goaltesting
+			gc(); //itterate through objects?
 		}
 		if(_completed)
 		{
 			gc = null;
+			tracking.GetComponent<Ship>().UpdateGoals();
 		}
 	}
 
-	//within min and max range
-	public void TestArea(GameObject go)
+	void InitTest()
 	{
-		Debug.Log("Area true!");
-		Debug.Log((go.transform.position-transform.position).magnitude);
-		_completed &= (go.transform.position-transform.position).magnitude > requiredRadius.x && 
-			(go.transform.position-transform.position).magnitude < requiredRadius.y;
+		_completed = true;
+	}
+	//within min and max range
+	void TestArea()
+	{
+		_completed &= (tracking.transform.position-transform.position).magnitude > requiredRadius.x && 
+			(tracking.transform.position-transform.position).magnitude < requiredRadius.y;
+		Debug.Log("area: " + _completed);
 	}
 
-	public void TestAge(GameObject go)
+	void TestAge()
 	{
-		Debug.Log("Age true!");
-		float age = go.GetComponent<PlayerBehaviour>().time;
+		float age = tracking.GetComponent<PlayerBehaviour>().time;
 		_completed &= age > requiredAge.x && age < requiredAge.y;
+		Debug.Log("age: " + _completed);
 	}
-	public void TestSpeed(GameObject go)
+	void TestSpeed()
 	{
-		Debug.Log("Speed true!");
-		float speed = go.GetComponent<Rigidbody2D>().velocity.magnitude;
+		float speed = tracking.GetComponent<Rigidbody2D>().velocity.magnitude;
 		_completed &= speed > requiredSpeed.x && speed < requiredSpeed.y;
+		Debug.Log("speed: " + _completed);
 	}
 
 	[System.Flags]

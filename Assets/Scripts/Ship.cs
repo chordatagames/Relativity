@@ -16,7 +16,7 @@ public class Ship : MonoBehaviour
 		}
 	}
 
-	void Update()
+	public void UpdateGoals()
 	{
 		foreach (LevelGoal lg in shipGoals)
 		{
@@ -34,6 +34,7 @@ public class Ship : MonoBehaviour
 
 	void ShipComplete()
 	{
-		Debug.Log("completed!");
+		Debug.Log("Ship " + GetInstanceID() + " completed!");
+		transform.parent.GetComponent<Level>().UpdateLevel(); //TODO Get level
 	}
 }

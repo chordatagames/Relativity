@@ -9,7 +9,7 @@ public class Level: MonoBehaviour
 	bool _completed;
 	public bool completed { get { return _completed; } }
 	
-	void Update()
+	public void UpdateLevel()
 	{
 		foreach (Ship ship in ships)
 		{
