@@ -11,19 +11,8 @@ public sealed class GizmoHandle : MonoBehaviour
 	[HideInInspector()]
 	public bool needUpdate = false;
 
-	[HideInInspector()]
-	public enum GizmoType
-	{
-		POSITION,
-		SCALE,
-		NONE
-	}
-
-	public static GizmoType type = GizmoType.POSITION;
-
 	private bool holding = false;
 	private Vector3	scaleCenter;
-	private CanvasRenderer renderer;
 
 	public void OnPress()
 	{
@@ -38,29 +27,22 @@ public sealed class GizmoHandle : MonoBehaviour
 		needUpdate = true;
 	}
 
-	void Awake()
-	{
-		renderer = GetComponent<CanvasRenderer>();
-	}
-
 	void Update()
 	{
-		renderer.SetAlpha( (GameController.mode != GameController.Mode.PLAY) ? 1 : 0 );
-		
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		mousePos.z = 0;
 		if (holding) 
 		{
-			switch (type)
+			switch (GameController.mode)
 			{
-			case GizmoType.POSITION:
+			case GameController.Mode.POSITIONING:
 				gizmoParent.transform.position = Grid.Gridify(mousePos);
 				break;
-			case GizmoType.SCALE:
+			case GameController.Mode.SCALING:
 				gizmoParent.localScale = Grid.Gridify(Vector3.one + Vector3.one * (mousePos - scaleCenter).sqrMagnitude * gizmoSensitivity);
 				gizmoParent.GetComponent<BlackHoleBehaviour>().mass = gizmoParent.localScale.sqrMagnitude;
 				break;
-			case GizmoType.NONE:
+			default:
 				break;
 			}
 		}

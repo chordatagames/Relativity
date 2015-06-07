@@ -35,6 +35,6 @@ public class Ship : MonoBehaviour
 	void ShipComplete()
 	{
 		Debug.Log("Ship " + GetInstanceID() + " completed!");
-		transform.parent.GetComponent<Level>().UpdateLevel(); //TODO Get level
+		GameController.control.level.UpdateLevel(); //TODO Get level
 	}
 }
