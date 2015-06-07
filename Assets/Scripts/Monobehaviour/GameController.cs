@@ -14,6 +14,8 @@ public class GameController : MonoBehaviour
 	public Button startingModeButton;
 
 	public GameObject blackHolePrefab;
+
+	[HideInInspector()]
 	public List<GameObject> blackholeList;
 	public Level level;
 	
