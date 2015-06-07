@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class GameController : MonoBehaviour
 {
@@ -8,27 +10,31 @@ public class GameController : MonoBehaviour
 	public RectTransform timePanel;
 	public Text worldTimeUI;
 	public Text localTimeUI;
+	public Text blackHoleCountUI;
 	public Button startingModeButton;
+
 	public GameObject blackHolePrefab;
+	public List<GameObject> blackholeList;
 	public Level level;
 	
 	public bool InPlayMode { get { return (mode == Mode.PLAY); } }
-
-	public static GameController control;
-	void Awake()
-	{
-		control = this;
-		PauseGame ();
-	}
 	
 	public enum Mode
 	{
 		SPAWNING = 0,
 		REMOVING = 1,
 		POSITIONING = 2,
-        SCALING = 3,
+		SCALING = 3,
         PLAY = 4
     }
+    
+    public static GameController control;
+	void Awake()
+	{
+		control = this;
+		PauseGame ();
+		WorldScene.Instance.ClearDataEntries();
+	}
 
 	void Start()
 	{
@@ -36,6 +42,9 @@ public class GameController : MonoBehaviour
         startingModeButton.onClick.Invoke();
 		worldTimeUI = timePanel.transform.FindChild ("World Time").GetComponent<Text>();
 		localTimeUI = timePanel.transform.FindChild ("Local Time").GetComponent<Text>();
+
+		startingModeButton.onClick.Invoke();
+		blackholeList = new List<GameObject>();
 	}
 
 	void Update ()
@@ -49,14 +58,25 @@ public class GameController : MonoBehaviour
 			switch(mode)
 			{
 			case Mode.REMOVING:
+				Vector3 removalPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+
+				foreach (GameObject bh in blackholeList)
+					if (bh.transform.position == removalPoint)
+					{
+						blackholeList.Remove(bh);
+						Destroy(bh);
+						blackHoleCountUI.text = blackholeList.Count.ToString();
+					}
 				break;
 
 			case Mode.SPAWNING:
-				Vector3 spawnPoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				spawnPoint = Grid.Gridify3(spawnPoint);
+				if (blackholeList.Count >= level.blackholeLimit) break;
+				Vector3 spawnPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
 				blackHole.transform.position = spawnPoint;
+				blackholeList.Add(blackHole);
+				blackHoleCountUI.text = blackholeList.Count.ToString();
 				break;
 			}
 		}

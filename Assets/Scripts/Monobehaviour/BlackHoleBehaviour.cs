@@ -25,7 +25,6 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 		Angles.RotateTransform(transform, Time.deltaTime * World.timeDilationFactor * rotationSpeed);
 		UpdateAreaOfEffectSize ();
 	}
-
 	
 	public void SetValues()
 	{

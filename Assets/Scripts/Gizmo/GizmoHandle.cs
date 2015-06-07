@@ -31,7 +31,7 @@ public sealed class GizmoHandle : MonoBehaviour
 	{
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		mousePos.z = 0;
-		if (holding) 
+		if (holding && GameController.control.blackholeList.Contains(gizmoParent.gameObject)) 
 		{
 			switch (GameController.mode)
 			{

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 public class WorldScene
 {
-
 	// Singleton pattern assignment.
 	private static WorldScene instance;
 	public static WorldScene Instance
@@ -20,6 +19,11 @@ public class WorldScene
 	}
 
 	public List<IGameEditable> dataEntries = new List<IGameEditable>();
+
+	public void ClearDataEntries ()
+	{
+		dataEntries = new List<IGameEditable>();
+	}
 
 	public void SetValues()
 	{
