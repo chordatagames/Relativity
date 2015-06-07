@@ -62,7 +62,7 @@ public class MainMenuManager : MonoBehaviour
 		Application.LoadLevel (levelNameString);
 	}
 
-	public enum UIScreen
+	private enum UIScreen
 	{
 		MainMenu,
 		LevelSelect

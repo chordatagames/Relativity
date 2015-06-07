@@ -13,21 +13,12 @@ public class GameController : MonoBehaviour
 	public Level level;
 	
 	public bool InPlayMode { get { return (mode == Mode.PLAY); } }
-	
-	// Singleton Pattern
+
 	public static GameController control;
 	void Awake()
 	{
-		if(control == null)
-		{
-			DontDestroyOnLoad(gameObject);
-			control = this;
-		}
-		else if(control != this)
-		{
-			Destroy(gameObject);
-		}
-		PauseGame();
+		control = this;
+		PauseGame ();
 	}
 	
 	public enum Mode
