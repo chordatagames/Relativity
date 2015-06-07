@@ -64,22 +64,40 @@ public class GameController : MonoBehaviour
 				Vector3 removalPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
 				foreach (GameObject bh in blackholeList)
+				{
 					if (bh.transform.position == removalPoint)
 					{
 						blackholeList.Remove(bh);
 						Destroy(bh);
 						blackHoleCountUI.text = blackholeList.Count.ToString();
 					}
+				}
 				break;
 
 			case Mode.SPAWNING:
-				if (blackholeList.Count >= level.blackholeLimit) break;
-				Vector3 spawnPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+				if (blackholeList.Count >= level.blackholeLimit)
+				{
+					break;
+				}
+				PointerEventData pe = new PointerEventData(EventSystem.current);
+				pe.position =  Input.mousePosition;
+				
+				List<RaycastResult> hits = new List<RaycastResult>();
+				EventSystem.current.RaycastAll( pe, hits );
+				bool notUI = true;
+				foreach (RaycastResult h in hits)
+				{
+					notUI &= (h.gameObject.layer != 5);//if all pass as other layers, notUI will remain true;
+				}
+				if (notUI)
+				{
+					Vector3 spawnPoint = Grid.Gridify3(Camera.main.ScreenToWorldPoint(Input.mousePosition));
 
-				GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
-				blackHole.transform.position = spawnPoint;
-				blackholeList.Add(blackHole);
-				blackHoleCountUI.text = blackholeList.Count.ToString();
+					GameObject blackHole = Instantiate<GameObject>(blackHolePrefab);
+					blackHole.transform.position = spawnPoint;
+					blackholeList.Add(blackHole);
+					blackHoleCountUI.text = blackholeList.Count.ToString();
+				}
 				break;
 			}
 		}

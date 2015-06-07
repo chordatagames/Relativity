@@ -30,7 +30,7 @@ public class GridGUI : MonoBehaviour {
 		GL.LoadProjectionMatrix(cam.projectionMatrix);
 		GL.modelview = cam.worldToCameraMatrix;
 		GL.Begin(GL.LINES);
-		GL.Color(Color.blue);
+		GL.Color(Color.gray);
 
 		// X axis lines
 		for(float i = origin.x-(gridSize.x/2+pass); i <= origin.x+(gridSize.x/2-pass); i += pass)
