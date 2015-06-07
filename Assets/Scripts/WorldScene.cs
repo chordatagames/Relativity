@@ -39,6 +39,7 @@ public class WorldScene
 		{
 			editable.ResetValues();
 		}
+		World.time = 0.0f;
 	}
 }
 

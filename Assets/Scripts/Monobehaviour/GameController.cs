@@ -51,7 +51,10 @@ public class GameController : MonoBehaviour
 	{
 		worldTimeUI.text = World.time.ToString();
 		localTimeUI.text = GameObject.FindGameObjectWithTag("Ship").GetComponent<PlayerBehaviour>().time.ToString();
-		World.PassTime();
+		if (mode == Mode.PLAY)
+		{
+			World.PassTime();
+		}
 
 		if(Input.GetMouseButtonDown(0))
 		{

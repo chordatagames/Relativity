@@ -34,6 +34,7 @@ public class PlayerBehaviour : MonoBehaviour, IGameEditable
 		transform.rotation		= Quaternion.Euler(Values.rotation);
 		transform.localScale 	= Values.scale;
 		rigidbody.velocity 		= Values.velocity;
+		_time = 0.0f;
 	}
 
 	void Update ()
@@ -62,7 +63,10 @@ public class PlayerBehaviour : MonoBehaviour, IGameEditable
 
 	void DoLocalTime()
 	{
-		_time += Time.deltaTime;
+		if (GameController.mode == GameController.Mode.PLAY)
+		{
+			_time += Time.deltaTime;
+		}
 	}
 
 	void DoGravity ()
