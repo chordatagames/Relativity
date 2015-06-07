@@ -42,8 +42,6 @@ public class GameController : MonoBehaviour
 	{
 		WorldScene.Instance.SetValues();
         startingModeButton.onClick.Invoke();
-		worldTimeUI = timePanel.transform.FindChild ("World Time").GetComponent<Text>();
-		localTimeUI = timePanel.transform.FindChild ("Local Time").GetComponent<Text>();
 
 		startingModeButton.onClick.Invoke();
 		blackholeList = new List<GameObject>();
