@@ -24,7 +24,7 @@ public class Ship : MonoBehaviour
 	{
 		Vector2 fromCenterDir = rigidbody.velocity.normalized;
 		float angle = Vector2.Angle(Vector2.right, -fromCenterDir)*Mathf.Deg2Rad*Mathf.Sign(-fromCenterDir.y) + Mathf.PI/2;
-		transform.rotation = new Quaternion(0, 0, 1 * Mathf.Sin (angle/2), Mathf.Cos (angle/2));
+		sprite.transform.rotation = new Quaternion(0, 0, 1 * Mathf.Sin (angle/2), Mathf.Cos (angle/2));
 	}
 
 	public void UpdateGoals()
