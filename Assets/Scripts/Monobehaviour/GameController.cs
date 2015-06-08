@@ -43,7 +43,6 @@ public class GameController : MonoBehaviour
 		WorldScene.Instance.SetValues();
         startingModeButton.onClick.Invoke();
 
-		startingModeButton.onClick.Invoke();
 		blackholeList = new List<GameObject>();
 	}
 
