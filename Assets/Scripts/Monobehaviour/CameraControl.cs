@@ -26,7 +26,7 @@ public class CameraControl : MonoBehaviour
 		if (Input.GetMouseButtonDown(1))
 		{
 			dragging = true;
-			difference = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+			difference = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 			pos = transform.position;
 		}
 		
@@ -37,12 +37,15 @@ public class CameraControl : MonoBehaviour
 		
 		if (Input.GetMouseButton(1))
 		{
+			transform.position -= (Camera.main.ScreenToWorldPoint(Input.mousePosition))-(Vector3)difference+Vector3.forward*10;
+			/*
 			transform.position = new Vector3
 			(
-				pos.x - (Camera.main.ScreenToViewportPoint(Input.mousePosition).x-difference.x) * dragRate,
-				pos.y - (Camera.main.ScreenToViewportPoint(Input.mousePosition).y-difference.y) * dragRate,
+				pos.x - (Camera.main.ScreenToWorldPoint(Input.mousePosition).x-difference.x) * dragRate,
+				pos.y - (Camera.main.ScreenToWorldPoint(Input.mousePosition).y-difference.y) * dragRate,
 				transform.position.z
 			);
+			*/
 		} 
 	}
 
