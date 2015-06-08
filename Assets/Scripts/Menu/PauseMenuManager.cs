@@ -33,7 +33,7 @@ public class PauseMenuManager : MonoBehaviour
 		currentScreen = UIScreen.Play;
 	}
 
-	public void MainMenuClicked ()
+	public void MainMenuButtonClicked ()
 	{
 		Application.LoadLevel ("Menu");
 	}

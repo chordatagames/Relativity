@@ -12,22 +12,23 @@ public class Level : MonoBehaviour
 
 	public void UpdateLevel()
 	{
-		foreach (Ship ship in ships)
+		if (!_completed)
 		{
-			if(!_completed)
+			_completed = true;
+			foreach (Ship ship in ships)
 			{
-				_completed = true;
 				_completed &= ship.completed;
 			}
-			if(_completed)
-			{
-				LevelComplete();
-			}
+		}
+
+		if(_completed)
+		{
+			LevelComplete();
 		}
 	}
 
 	void LevelComplete()
 	{
-		//Menu-popup
+
 	}
 }
