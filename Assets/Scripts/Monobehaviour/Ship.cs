@@ -22,9 +22,21 @@ public class Ship : MonoBehaviour
 
 	void Update() 
 	{
+		// rotate sprite according to direction of velocity
 		Vector2 fromCenterDir = rigidbody.velocity.normalized;
 		float angle = Vector2.Angle(Vector2.right, -fromCenterDir)*Mathf.Deg2Rad*Mathf.Sign(-fromCenterDir.y) + Mathf.PI/2;
 		sprite.transform.rotation = new Quaternion(0, 0, 1 * Mathf.Sin (angle/2), Mathf.Cos (angle/2));
+
+		// check if ship is outside level bounds
+		if (!GameController.control.level.levelBounds.Contains(transform.position))
+		{
+			print("Ship " + GetInstanceID() + " out of bounds.");
+			foreach (LevelGoal goal in shipGoals)
+			{
+				if (goal.goalState == LevelGoal.GoalState.INCOMPLETE)
+					goal.goalState = LevelGoal.GoalState.FAILED;
+			}
+		}
 	}
 
 	public void UpdateGoals()
@@ -34,7 +46,7 @@ public class Ship : MonoBehaviour
 			if(!_completed)
 			{
 				_completed = true;
-				_completed &= lg.completed;
+				_completed &= (lg.completed && lg.goalState != LevelGoal.GoalState.FAILED);
 			}
 			if(_completed)
 			{

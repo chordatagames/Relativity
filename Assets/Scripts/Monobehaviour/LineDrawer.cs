@@ -45,38 +45,28 @@ public class LineDrawer : MonoBehaviour
 		}
 	}
 
-	// lmao
-	private void CreateLineMaterial() {
-		if (!lineMaterial) {
-			lineMaterial = new Material("Shader \"Lines/Colored Blended\" {" + "SubShader { Pass { " + "    Blend SrcAlpha OneMinusSrcAlpha " + "    ZWrite Off Cull Off Fog { Mode Off } " + "    BindChannels {" + "      Bind \"vertex\", vertex Bind \"color\", color }" + "} } }");
-			lineMaterial.hideFlags = HideFlags.HideAndDontSave;
-			lineMaterial.shader.hideFlags = HideFlags.HideAndDontSave;
-		}
-	}
-
 	void OnPostRender() 
 	{
 		//if (GameController.mode == GameController.Mode.SPAWNING) 
 		//{
-			CreateLineMaterial();
-			GL.PushMatrix();
-			lineMaterial.SetPass(0);
-			GL.LoadOrtho();
-			GL.LoadProjectionMatrix(cam.projectionMatrix);
-			GL.modelview = cam.worldToCameraMatrix;
-			GL.Begin(GL.LINES);
-			GL.Color(Color.blue);
+		GLFunctionality.CreateDefaultLineMaterial(ref lineMaterial);
+		GL.PushMatrix();
+		lineMaterial.SetPass(0);
+		GL.LoadOrtho();
+		GL.LoadProjectionMatrix(cam.projectionMatrix);
+		GL.modelview = cam.worldToCameraMatrix;
+		GL.Begin(GL.LINES);
 
-			for (int i = 1; i < lines.Count-1; i++)
-			{
-				GL.Color(new Color((1f/10f)*lines[i].timeDilation,1-(1f/10f)*lines[i].timeDilation,0));
+		for (int i = 1; i < lines.Count-1; i++)
+		{
+			GL.Color(new Color((1f/10f)*lines[i].timeDilation,1-(1f/10f)*lines[i].timeDilation,0));
 
-				GL.Vertex(lines[i-1].position);
-				GL.Vertex(lines[i].position);
-			}
+			GL.Vertex(lines[i-1].position);
+			GL.Vertex(lines[i].position);
+		}
 			
-			GL.End();
-			GL.PopMatrix();
+		GL.End();
+		GL.PopMatrix();
 		//}
 	}
 }

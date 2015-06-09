@@ -5,7 +5,8 @@ using System.Collections.Generic;
 public class Level : MonoBehaviour
 {
 	public Ship[] ships;
-	public int blackholeLimit;
+	public int blackholeLimit;  
+	public Rect levelBounds;
 
 	bool _completed;
 	public bool completed { get { return _completed; } }

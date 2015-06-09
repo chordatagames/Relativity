@@ -3,6 +3,13 @@ using System.Collections;
 
 public class LevelGoal : MonoBehaviour
 {
+	public enum GoalState
+	{
+		FAILED,
+		INCOMPLETE,
+		COMPLETED
+	}
+
 	Transform AreaUI;
 
 	public Vector2 requiredRadius;
@@ -11,6 +18,8 @@ public class LevelGoal : MonoBehaviour
 	
 	public GameObject tracking;
 	public LevelGoalCondition goalCondition;
+
+	public GoalState goalState;
 
 	bool _completed = true;
 	public bool completed { get { return _completed; } }
@@ -52,7 +61,7 @@ public class LevelGoal : MonoBehaviour
 		if(gc != null)
 		{
 			//_completed may change in goaltesting
-			gc(); //itterate through objects?
+			gc(); //iterate through objects?
 		}
 		if(_completed)
 		{
