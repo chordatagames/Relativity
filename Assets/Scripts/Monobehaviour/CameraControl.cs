@@ -5,6 +5,8 @@ public class CameraControl : MonoBehaviour
 {
 	public float dragRate;
 	public float zoomRate;
+    [Header("x is lower limit, y is upper limit")]
+    public Vector2 zoomLimit;
 
 	private Vector2 difference;
 	private Vector2 pos;
@@ -27,7 +29,6 @@ public class CameraControl : MonoBehaviour
 		{
 			dragging = true;
 			difference = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			pos = transform.position;
 		}
 		
 		if (Input.GetMouseButtonUp(1))
@@ -51,7 +52,11 @@ public class CameraControl : MonoBehaviour
 
 	void Zoom()
 	{
-		// same as the above w/r/t hardcoded controls.
-		Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomRate;
+        print(Input.GetAxis("Mouse ScrollWheel"));
+        if ((Camera.main.orthographicSize > zoomLimit.x && Input.GetAxis("Mouse ScrollWheel") > 0) ||
+            (Camera.main.orthographicSize < zoomLimit.y && Input.GetAxis("Mouse ScrollWheel") < 0))
+        {
+            Camera.main.orthographicSize -= Input.GetAxis("Mouse ScrollWheel") * zoomRate;
+        }
 	}
 }
