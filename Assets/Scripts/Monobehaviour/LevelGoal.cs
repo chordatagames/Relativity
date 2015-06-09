@@ -30,7 +30,8 @@ public class LevelGoal : MonoBehaviour
 	void Start()
 	{
 		SetupAreaUI();
-		
+		goalState = GoalState.INCOMPLETE;
+
 		//Setup what to test
 		gc += InitTest;
 		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoalCondition) ).Length); i+=i )
