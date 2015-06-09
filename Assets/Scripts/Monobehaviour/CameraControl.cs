@@ -52,7 +52,6 @@ public class CameraControl : MonoBehaviour
 
 	void Zoom()
 	{
-        print(Input.GetAxis("Mouse ScrollWheel"));
         if ((Camera.main.orthographicSize > zoomLimit.x && Input.GetAxis("Mouse ScrollWheel") > 0) ||
             (Camera.main.orthographicSize < zoomLimit.y && Input.GetAxis("Mouse ScrollWheel") < 0))
         {
