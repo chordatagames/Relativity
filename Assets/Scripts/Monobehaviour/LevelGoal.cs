@@ -3,6 +3,8 @@ using System.Collections;
 
 public class LevelGoal : MonoBehaviour
 {
+	Transform AreaUI;
+
 	public Vector2 requiredRadius;
 	public Vector2 requiredAge;
 	public Vector2 requiredSpeed;
@@ -18,6 +20,8 @@ public class LevelGoal : MonoBehaviour
 
 	void Start()
 	{
+		SetupAreaUI();
+		
 		//Setup what to test
 		gc += InitTest;
 		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoalCondition) ).Length); i+=i )
@@ -55,6 +59,8 @@ public class LevelGoal : MonoBehaviour
 			gc = null;
 			tracking.GetComponent<Ship>().UpdateGoals();
 		}
+		
+		
 	}
 
 	void InitTest()
@@ -80,6 +86,22 @@ public class LevelGoal : MonoBehaviour
 		float speed = tracking.GetComponent<Rigidbody2D>().velocity.magnitude;
 		_completed &= speed > requiredSpeed.x && speed < requiredSpeed.y;
 		Debug.Log("speed: " + _completed);
+	}
+	
+	void SetupAreaUI ()
+	{
+		FindAreaUI();
+		SetAreaUI();
+	}
+	
+	void FindAreaUI ()
+	{
+		AreaUI = transform.FindChild("Canvas").FindChild("Goal Area");
+	}
+	
+	void SetAreaUI ()
+	{
+		AreaUI.localScale = 2.0f * new Vector3 (requiredRadius.y, requiredRadius.y, 0f);
 	}
 
 	[System.Flags]
