@@ -67,6 +67,7 @@ public class GameController : MonoBehaviour
 					if (bh.transform.position == removalPoint)
 					{
 						blackholeList.Remove(bh);
+						WorldScene.Instance.dataEntries.Remove((IGameEditable)bh.GetComponent<BlackHoleBehaviour>());
 						Destroy(bh);
 						blackHoleCountUI.text = blackholeList.Count.ToString();
 					}
