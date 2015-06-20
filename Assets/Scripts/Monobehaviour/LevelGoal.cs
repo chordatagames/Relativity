@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class LevelGoal : MonoBehaviour
 {
@@ -39,21 +41,31 @@ public class LevelGoal : MonoBehaviour
 			switch ((int)goalCondition & i) 
 			{
 			case (int)LevelGoalCondition.AREA:
-				Debug.Log("testing area");
 				gc += TestArea;
 				break;
 			case (int)LevelGoalCondition.AGE:
-				Debug.Log("testing age");
 				gc += TestAge;
 				break;
 			case (int)LevelGoalCondition.SPEED:
-				Debug.Log("testing speed");
 				gc += TestSpeed;
 				break;
 			default:
 				break;
 			}
 		}
+	}
+
+	public LevelGoalCondition[] GetSeparateConditions()
+	{
+		List<LevelGoalCondition> conditions = new List<LevelGoalCondition>();
+		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoalCondition) ).Length); i<<=1 )
+		{
+			if( ((int)goalCondition & i) == i) 
+			{
+				conditions.Add((LevelGoalCondition)i);
+			}
+		}
+		return conditions.ToArray();
 	}
 
 	void Update()
@@ -106,7 +118,7 @@ public class LevelGoal : MonoBehaviour
 	
 	void FindAreaUI ()
 	{
-		AreaUI = transform.FindChild("Canvas").FindChild("Goal Area");
+		AreaUI = transform.FindChild("Canvas").FindChild("Goal Area"); //FIXME Use a public field instead
 	}
 	
 	void SetAreaUI ()
