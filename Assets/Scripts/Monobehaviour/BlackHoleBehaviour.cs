@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
@@ -22,7 +22,7 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 
 	void Update ()
 	{
-		Angles.RotateTransform(transform, Time.deltaTime * World.timeDilationFactor * rotationSpeed);
+		Angles.RotateTransform(transform, Time.deltaTime * World.relativeTimeDilationFactor * rotationSpeed);
 		UpdateAreaOfEffectSize ();
 	}
 	
@@ -42,14 +42,13 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 	{
 		if (col.tag == "Ship")
 		{
-			Rigidbody2D colrig = col.transform.GetComponent<Rigidbody2D> ();
 			Vector2 force = (Vector2)(transform.position - col.transform.position).normalized
-				* col.transform.GetComponent<PlayerBehaviour> ().gravityConstant
+				* World.gravityConstant
 				* mass
-				* colrig.mass
+				* col.transform.GetComponent<Rigidbody2D>().mass
 				* Mathf.Pow ((transform.position - col.transform.position).magnitude, -2);
-			colrig.AddForce(force);
-			col.transform.GetComponent<PlayerBehaviour>().addTimeDilationForce(force);
+			col.transform.GetComponent<PlayerBehaviour>().AddForce(force);
+			col.transform.GetComponent<PlayerBehaviour>().AddTimeDilationForce(force);
 		}
 	}
 

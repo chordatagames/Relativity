@@ -94,20 +94,20 @@ public class LevelGoal : MonoBehaviour
 	{
 		_completed &= (tracking.transform.position-transform.position).magnitude > requiredRadius.x && 
 			(tracking.transform.position-transform.position).magnitude < requiredRadius.y;
-		Debug.Log("area: " + _completed);
+		//Debug.Log("area: " + _completed);
 	}
 
 	void TestAge()
 	{
 		float age = tracking.GetComponent<PlayerBehaviour>().time;
 		_completed &= age > requiredAge.x && age < requiredAge.y;
-		Debug.Log("age: " + _completed);
+		//Debug.Log("age: " + _completed);
 	}
 	void TestSpeed()
 	{
 		float speed = tracking.GetComponent<Rigidbody2D>().velocity.magnitude;
 		_completed &= speed > requiredSpeed.x && speed < requiredSpeed.y;
-		Debug.Log("speed: " + _completed);
+		//Debug.Log("speed: " + _completed);
 	}
 	
 	void SetupAreaUI ()

@@ -61,9 +61,9 @@ public struct GameEditableValues
 		position 	= gameObject.transform.position;
 		rotation 	= gameObject.transform.rotation.eulerAngles;
 		scale 		= gameObject.transform.localScale;
-		if ( gameObject.GetComponent<Rigidbody2D>() )
+		if ( gameObject.GetComponent<PlayerBehaviour>() )
 		{
-			velocity = gameObject.GetComponent<Rigidbody2D>().velocity;
+			velocity = gameObject.GetComponent<PlayerBehaviour>().localVelocity;
 		}
 		else
 		{

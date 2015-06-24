@@ -12,8 +12,13 @@ public class GameController : MonoBehaviour
 	public Text localTimeUI;
 	public Text blackHoleCountUI;
 	public Button startingModeButton;
+	
+	public static GameController control;
 
 	public GameObject blackHolePrefab;
+
+	PlayerBehaviour _currentShip;
+	public PlayerBehaviour currentShip { get { return _currentShip; } set { SetCurrentShip(value); } }
 
 	[HideInInspector()]
 	public List<GameObject> blackholeList;
@@ -30,7 +35,6 @@ public class GameController : MonoBehaviour
         PLAY = 4
     }
     
-    public static GameController control;
 	void Awake()
 	{
 		control = this;
@@ -42,14 +46,15 @@ public class GameController : MonoBehaviour
 	{
 		WorldScene.Instance.SetValues();
         startingModeButton.onClick.Invoke();
-
+		
 		blackholeList = new List<GameObject>();
+		currentShip = GameObject.FindGameObjectWithTag ("Ship").GetComponent<PlayerBehaviour> ();
 	}
 
 	void Update ()
 	{
 		worldTimeUI.text = World.time.ToString();
-		localTimeUI.text = GameObject.FindGameObjectWithTag("Ship").GetComponent<PlayerBehaviour>().time.ToString();
+		localTimeUI.text = currentShip.time.ToString();
 		if (mode == Mode.PLAY)
 		{
 			World.PassTime();
@@ -117,5 +122,11 @@ public class GameController : MonoBehaviour
 	public void UnpauseGame()
     {
         Time.timeScale = 1;
+	}
+
+	void SetCurrentShip (PlayerBehaviour newShip)
+	{
+		_currentShip = newShip;
+		World.SetAllRelativeTimeDilationFactors ();
 	}
 }

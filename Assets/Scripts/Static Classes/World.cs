@@ -9,8 +9,10 @@ public static class World
 {
 	static float _time = 0.0f;
 	public static float time {get{return _time;} set{_time = value;}}
-
-	public static float timeDilationFactor = 1.0f;
+	
+	public static float gravityConstant = 10.0f;
+	public static float timeDistortionConstant = 4.0f;
+	public static float relativeTimeDilationFactor = 1.0f;
 
 	public static void AddTime (float t)
 	{
@@ -19,6 +21,11 @@ public static class World
 
 	public static void PassTime ()
 	{
-		AddTime(Time.deltaTime * timeDilationFactor);
+		AddTime(Time.deltaTime * relativeTimeDilationFactor);
+	}
+
+	public static void SetAllRelativeTimeDilationFactors()
+	{
+		GameController.control.currentShip.UpdateWorldRelativeTimeDilationFactor();
 	}
 }

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -11,7 +11,7 @@ public class LineDrawer : MonoBehaviour
 
 		public LineProp(Vector3 position) {
 			this.position = position;
-			this.timeDilation = World.timeDilationFactor;
+			this.timeDilation = GameController.control.currentShip.localTimeDilationFactor;
 		}
 	}
 
@@ -47,8 +47,6 @@ public class LineDrawer : MonoBehaviour
 
 	void OnPostRender() 
 	{
-		//if (GameController.mode == GameController.Mode.SPAWNING) 
-		//{
 		GLFunctionality.CreateDefaultLineMaterial(ref lineMaterial);
 		GL.PushMatrix();
 		lineMaterial.SetPass(0);
@@ -59,7 +57,7 @@ public class LineDrawer : MonoBehaviour
 
 		for (int i = 1; i < lines.Count-1; i++)
 		{
-			GL.Color(new Color((1f/10f)*lines[i].timeDilation,1-(1f/10f)*lines[i].timeDilation,0));
+			GL.Color(new Color(0.1f * Mathf.Pow(lines[i].timeDilation, -0.5f), 1.0f - 0.1f * Mathf.Pow(lines[i].timeDilation, -0.5f),0));
 
 			GL.Vertex(lines[i-1].position);
 			GL.Vertex(lines[i].position);
@@ -67,6 +65,5 @@ public class LineDrawer : MonoBehaviour
 			
 		GL.End();
 		GL.PopMatrix();
-		//}
 	}
 }
