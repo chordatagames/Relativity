@@ -13,8 +13,6 @@ public class LevelGoal : MonoBehaviour
 		INCOMPLETE,
 		COMPLETED
 	}
-//	public Vector2 requiredRadius; //TODO remove plz?
-//	public Transform AreaUI;
 	
 	public GameObject tracking;
 
