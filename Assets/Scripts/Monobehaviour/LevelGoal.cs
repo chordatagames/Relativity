@@ -16,16 +16,16 @@ public class LevelGoal : MonoBehaviour
 	public GameObject tracking;
 	
 	public GoalState goalState;
-	
+
 	private List<LevelGoalCondition> 	_conditions = new List<LevelGoalCondition>();
-	public LevelGoalCondition[] 		conditions { get { return _conditions.ToArray(); } }
+	public LevelGoalCondition[] conditions { get { return _conditions.ToArray(); } }
 	
 	private bool _completed;
 	public bool completed { get { return _completed; } }
 	
 	void Start()
 	{
-		foreach(LevelGoalCondition lgc in GetComponents<LevelGoalCondition>())
+		foreach(LevelGoalCondition lgc in transform.GetComponentsInChildren<LevelGoalCondition>())
 		{
 			_conditions.Add(lgc);
 		}

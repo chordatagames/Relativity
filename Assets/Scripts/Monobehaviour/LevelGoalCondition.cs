@@ -8,16 +8,26 @@ public class LevelGoalCondition : MonoBehaviour
 	public class LevelGoalConditionTest : UnityEvent<LevelGoal>
 	{}
 
-	public ConditionType desc;//ConditionType description
+	public ConditionType typeDesc;//ConditionType description
 	public float min, max;
 	private bool _completed;
 	public bool completed { get { return _completed; } }
 
 	public LevelGoalConditionTest conditionTester;
 
+	void FixedUpdate()
+	{
+		Debug.Log(this + " is " + (completed ? "" : "not ") + "completed");
+	}
+
+	public override string ToString ()
+	{
+		return MissionBriefGenerator.ConditionBrief(typeDesc,min,max);
+	}
+
 	void AssignCompleted(float value)
 	{
-		_completed = (value>min && value<max) || (value>min && max<0); //between limits or over minlimit if max is "infinity".
+		_completed = (value>this.min && value<this.max) || (value>this.min && this.max<=0); //between limits or over minlimit if max is "infinity".
 	}
 
 	public void AreaTest(LevelGoal lg)

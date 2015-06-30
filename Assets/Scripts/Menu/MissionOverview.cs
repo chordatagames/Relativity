@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
+using System.Collections.Generic;
 
 public sealed class MissionOverview : MonoBehaviour {
 	
 	public GameObject goalViewPrefab, conditionViewPrefab; //The standard UI-elements for goals and conditions
 
 	public Transform goalsPanel;
+	Dictionary<LevelGoal,GameObject> GoalUIConnection = new Dictionary<LevelGoal, GameObject>();
+	Dictionary<LevelGoalCondition,GameObject> ConditionUIConnection = new Dictionary<LevelGoalCondition, GameObject>();
 
 	Level level;
 
@@ -19,11 +21,13 @@ public sealed class MissionOverview : MonoBehaviour {
 			foreach (LevelGoal goal in ship.shipGoals)
 			{
 				GameObject go = Instantiate<GameObject>(goalViewPrefab);
+				GoalUIConnection.Add(goal,go);
 				go.transform.SetParent(goalsPanel);
 				//TODO GENERATE NAMES BASED ON TYPE AND SHIP go.name =
-				foreach (LevelGoal.LevelGoalCondition condition in goal.GetSeparateConditions())
+				foreach (LevelGoalCondition condition in goal.conditions)
 				{
 					GameObject c = Instantiate<GameObject>(conditionViewPrefab);
+					ConditionUIConnection.Add(condition,c);
 					c.transform.SetParent(go.transform.FindChild("Conditions").transform);
 
 					c.transform.FindChild("Label").GetComponent<Text>().text = condition.ToString();
@@ -31,9 +35,31 @@ public sealed class MissionOverview : MonoBehaviour {
 			}
 		}
 	}
-	
+	GameObject panel;
 	// Update is called once per frame
-	void Update () {
-	
+	void Update () 
+	{
+		foreach(LevelGoal lg in GoalUIConnection.Keys)
+		{
+			if(GoalUIConnection.TryGetValue(lg, out panel))
+			{
+				panel.transform.GetChild(0).GetChild(0).GetComponent<Toggle>().isOn = !lg.completed;
+				if(lg.completed)
+				{
+					panel.GetComponent<Image>().color = Color.green;
+				}
+			}
+		}
+		foreach(LevelGoalCondition lgc in ConditionUIConnection.Keys)
+		{
+			if(ConditionUIConnection.TryGetValue(lgc, out panel))
+			{
+				panel.transform.GetChild(0).GetComponent<Toggle>().isOn = !lgc.completed;
+				if(lgc.completed)
+				{
+					panel.GetComponent<Image>().color = Color.green;
+				}
+			}
+		}
 	}
 }

@@ -12,7 +12,9 @@ public class PlayerBehaviour : MonoBehaviour, IGameEditable
 	public float time {get{return _time;} set{_time = value;}}
 
 	Vector2 timeDilationForce;
+	[Range(0.1f,100.0f)]
 	public float localTimeDilationFactor;
+	[Range(0.1f,100.0f)]
 	public float relativeTimeDilationFactor;
 
 	void Start ()

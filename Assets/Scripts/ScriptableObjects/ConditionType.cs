@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 [CreateAssetMenu]
+[System.Serializable]
 public class ConditionType : ScriptableObject
 {
 	public string subject;
