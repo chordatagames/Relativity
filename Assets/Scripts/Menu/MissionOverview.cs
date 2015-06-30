@@ -21,19 +21,20 @@ public sealed class MissionOverview : MonoBehaviour {
 				GameObject go = Instantiate<GameObject>(goalViewPrefab);
 				go.transform.SetParent(goalsPanel);
 				//TODO GENERATE NAMES BASED ON TYPE AND SHIP go.name =
-				foreach (LevelGoal.LevelGoalCondition condition in goal.GetSeparateConditions())
+				foreach (LevelGoalCondition c in goal.conditions)
 				{
-					GameObject c = Instantiate<GameObject>(conditionViewPrefab);
-					c.transform.SetParent(go.transform.FindChild("Conditions").transform);
-
-					c.transform.FindChild("Label").GetComponent<Text>().text = condition.ToString();
+					GameObject cView = Instantiate<GameObject>(conditionViewPrefab);
+					cView.transform.SetParent(go.transform.FindChild("Conditions").transform);
+					Debug.Log(MissionBriefGenerator.ConditionBrief(c.desc, c.min, c.max));
+					cView.transform.FindChild("Label").GetComponent<Text>().text = MissionBriefGenerator.ConditionBrief(c.desc, c.min, c.max);
 				}
 			}
 		}
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+	{
+		
 	}
 }

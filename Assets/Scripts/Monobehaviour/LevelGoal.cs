@@ -1,136 +1,77 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
 
 
 public class LevelGoal : MonoBehaviour
 {
+
 	public enum GoalState
 	{
 		FAILED,
 		INCOMPLETE,
 		COMPLETED
 	}
-
-	Transform AreaUI;
-
-	public Vector2 requiredRadius;
-	public Vector2 requiredAge;
-	public Vector2 requiredSpeed;
+//	public Vector2 requiredRadius; //TODO remove plz?
+//	public Transform AreaUI;
 	
 	public GameObject tracking;
-	public LevelGoalCondition goalCondition;
 
 	public GoalState goalState;
 
-	bool _completed = true;
-	public bool completed { get { return _completed; } }
+	private List<LevelGoalCondition> 	_conditions = new List<LevelGoalCondition>();
+	public LevelGoalCondition[] 		conditions { get { return _conditions.ToArray(); } }
 
-	delegate void GoalCheck();
-	GoalCheck gc;
+	private bool _completed;
+	public bool completed { get { return _completed; } }
 
 	void Start()
 	{
-		SetupAreaUI();
-		goalState = GoalState.INCOMPLETE;
-
-		//Setup what to test
-		gc += InitTest;
-		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoalCondition) ).Length); i+=i )
+		foreach(LevelGoalCondition lgc in GetComponents<LevelGoalCondition>())
 		{
-			switch ((int)goalCondition & i) 
-			{
-			case (int)LevelGoalCondition.AREA:
-				gc += TestArea;
-				break;
-			case (int)LevelGoalCondition.AGE:
-				gc += TestAge;
-				break;
-			case (int)LevelGoalCondition.SPEED:
-				gc += TestSpeed;
-				break;
-			default:
-				break;
-			}
+			_conditions.Add(lgc);
 		}
+		goalState = GoalState.INCOMPLETE;
+	
 	}
 
-	public LevelGoalCondition[] GetSeparateConditions()
+	void CompletedTest()
 	{
-		List<LevelGoalCondition> conditions = new List<LevelGoalCondition>();
-		for(int i=1; i < Mathf.Pow(2, System.Enum.GetNames( typeof(LevelGoalCondition) ).Length); i<<=1 )
+		_completed = true;
+		foreach(LevelGoalCondition c in conditions)
 		{
-			if( ((int)goalCondition & i) == i) 
-			{
-				conditions.Add((LevelGoalCondition)i);
-			}
+			c.conditionTester.Invoke(this);
+			_completed &= c.completed;
 		}
-		return conditions.ToArray();
 	}
 
 	void Update()
 	{
-		//Perform tests
-		if(gc != null)
-		{
-			//_completed may change in goaltesting
-			gc(); //iterate through objects?
-		}
 		if(_completed)
 		{
-			gc = null;
+			goalState=GoalState.COMPLETED;
 			tracking.GetComponent<Ship>().UpdateGoals();
 		}
-		
-		
+		else
+		{
+			CompletedTest();
+		}
 	}
 
-	void InitTest()
-	{
-		_completed = true;
-	}
-	//within min and max range
-	void TestArea()
-	{
-		_completed &= (tracking.transform.position-transform.position).magnitude > requiredRadius.x && 
-			(tracking.transform.position-transform.position).magnitude < requiredRadius.y;
-		Debug.Log("area: " + _completed);
-	}
-
-	void TestAge()
-	{
-		float age = tracking.GetComponent<PlayerBehaviour>().time;
-		_completed &= age > requiredAge.x && age < requiredAge.y;
-		Debug.Log("age: " + _completed);
-	}
-	void TestSpeed()
-	{
-		float speed = tracking.GetComponent<Rigidbody2D>().velocity.magnitude;
-		_completed &= speed > requiredSpeed.x && speed < requiredSpeed.y;
-		Debug.Log("speed: " + _completed);
-	}
-	
-	void SetupAreaUI ()
-	{
-		FindAreaUI();
-		SetAreaUI();
-	}
-	
-	void FindAreaUI ()
-	{
-		AreaUI = transform.FindChild("Canvas").FindChild("Goal Area"); //FIXME Use a public field instead
-	}
-	
-	void SetAreaUI ()
-	{
-		AreaUI.localScale = 2.0f * new Vector3 (requiredRadius.y, requiredRadius.y, 0f);
-	}
-
-	[System.Flags]
-	public enum LevelGoalCondition
-	{
-		AGE 	= 1,	//0x00000001
-		AREA	= 2,	//0x00000010
-		SPEED	= 4,	//0x00000100
-	}
+//	void SetupAreaUI ()
+//	{
+//		FindAreaUI();
+//		SetAreaUI();
+//	}
+//	
+//	void FindAreaUI ()
+//	{
+//		AreaUI = transform.FindChild("Canvas").FindChild("Goal Area"); //FIXME Use a public field instead
+//	}
+//	
+//	void SetAreaUI ()
+//	{
+//		AreaUI.localScale = 2.0f * new Vector3 (requiredRadius.y, requiredRadius.y, 0f);
+//	}
 }
