@@ -14,18 +14,28 @@ public class LevelGoalCondition : MonoBehaviour
 	public bool completed { get { return _completed; } }
 
 	public LevelGoalConditionTest conditionTester;
-
-	void FixedUpdate()
-	{
-		Debug.Log(this + " is " + (completed ? "" : "not ") + "completed");
-	}
+	public UnityEvent setupCommands;
+	
 
 	public override string ToString ()
 	{
 		return MissionBriefGenerator.ConditionBrief(typeDesc,min,max);
 	}
 
-	void AssignCompleted(float value)
+	void Start()
+	{
+		setupCommands.Invoke();
+	}
+
+	//SETUP COMMANDS
+
+	public void SetSize(RectTransform rectTransform)
+	{
+		rectTransform.localScale = Vector3.one*max*2;//Size defined as diameter, max is as radius.
+	}
+
+	//CONDITION TESTING
+	private void AssignCompleted(float value)
 	{
 		_completed = (value>this.min && value<this.max) || (value>this.min && this.max<=0); //between limits or over minlimit if max is "infinity".
 	}

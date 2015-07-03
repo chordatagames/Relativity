@@ -8,9 +8,16 @@ public class CameraControl : MonoBehaviour
     [Header("x is lower limit, y is upper limit")]
     public Vector2 zoomLimit;
 
+	private Rect dragLimits;
+
 	private Vector2 difference;
-	private Vector2 pos;
+	private Vector3 pos;
 	private bool dragging = false;
+
+	void Start()
+	{
+		dragLimits = GameController.control.level.levelArea;
+	}
 
 	void LateUpdate() 
 	{
@@ -38,15 +45,12 @@ public class CameraControl : MonoBehaviour
 		
 		if (Input.GetMouseButton(1))
 		{
-			transform.position -= (Camera.main.ScreenToWorldPoint(Input.mousePosition))-(Vector3)difference+Vector3.forward*10;
-			/*
-			transform.position = new Vector3
-			(
-				pos.x - (Camera.main.ScreenToWorldPoint(Input.mousePosition).x-difference.x) * dragRate,
-				pos.y - (Camera.main.ScreenToWorldPoint(Input.mousePosition).y-difference.y) * dragRate,
-				transform.position.z
-			);
-			*/
+			transform.position -=(Camera.main.ScreenToWorldPoint(Input.mousePosition))-(Vector3)difference+Vector3.forward*10;
+	
+			transform.position = new Vector3(
+				Mathf.Clamp(transform.position.x,dragLimits.x,dragLimits.xMax),
+				Mathf.Clamp(transform.position.y,dragLimits.y,dragLimits.yMax),
+				transform.position.z);
 		} 
 	}
 
