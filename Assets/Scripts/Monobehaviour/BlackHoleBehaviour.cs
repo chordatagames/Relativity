@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
+public class BlackHoleBehaviour : GameObstacle
 {
-	public GameEditableValues Values { get; set; }
-
 	public float mass;
 	public float rotationSpeed;
 	public float areaOfEffectRadius;
@@ -24,18 +23,6 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 	{
 		Angles.RotateTransform(transform, Time.deltaTime * World.timeDilationFactor * rotationSpeed);
 		UpdateAreaOfEffectSize ();
-	}
-	
-	public void SetValues()
-	{
-		Values = new GameEditableValues(gameObject);
-	}
-	
-	public void ResetValues()
-	{
-		transform.position 		= Values.position;
-		transform.rotation		= Quaternion.Euler(Values.rotation);
-		transform.localScale 	= Values.scale;
 	}
 
 	void OnTriggerStay2D (Collider2D col)
@@ -57,5 +44,31 @@ public class BlackHoleBehaviour : MonoBehaviour, IGameEditable
 	{
 		areaOfEffect.radius = areaOfEffectRadius;
 		areaOfEffectUI.localScale = new Vector3 (areaOfEffectRadius * 2, areaOfEffectRadius * 2, 0);
+	}
+
+	public override LevelObject[] GetValues()
+	{
+		
+	}
+
+	public override void SetValues(ValueType[] vals)
+	{
+		foreach (ValueType val in vals) 
+        {
+			switch (val.key)
+			{
+				case "mass":
+					mass = float.Parse(val.value[0]);
+					break;
+				case "position":
+					transform.position = new Vector2(float.Parse(val.value[0]), float.Parse(val.value[1]));
+					break;
+			}
+		}
+	}
+
+	public override void ResetValues()
+	{
+		throw new NotImplementedException();
 	}
 }
