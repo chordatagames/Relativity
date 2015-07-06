@@ -100,6 +100,23 @@ public class PlayerBehaviour : MonoBehaviour, IGameEditable
 
 	void MoveShip ()
 	{
-		transform.position += (Vector3)(localVelocity * relativeTimeDilationFactor * Time.deltaTime);
+		transform.position += (Vector3)localVelocity * relativeTimeDilationFactor * Time.deltaTime;
+	}
+
+	void OnDrawGizmosSelected()
+	{
+		Vector2 force = initialSpeed;
+		Vector3 lastPos = transform.position;
+		Vector3 pos = transform.position;
+
+		int precision = 100; //higher values for more precise estimations
+		int estimateTime = 10; //seconds to estimate ships orbital track
+		for(int i = 0; i < (estimateTime*precision); i++)
+		{
+			force += BlackHoleBehaviour.GetPotentialGravityForce(gameObject, lastPos);
+			pos += (Vector3)force * (1.0f/precision); //TODO a value must also represent relativeTimeDilation, it must be calculated each iteration
+			Gizmos.DrawLine(lastPos, pos);
+			lastPos=pos;
+		}
 	}
 }
