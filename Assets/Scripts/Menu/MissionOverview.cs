@@ -43,10 +43,24 @@ public sealed class MissionOverview : MonoBehaviour {
 		{
 			if(GoalUIConnection.TryGetValue(lg, out panel))
 			{
-				panel.transform.GetChild(0).GetChild(0).GetComponent<Toggle>().isOn = !lg.completed;
-				if(lg.completed)
+				panel.transform.GetChild(0).GetChild(0).GetComponent<Toggle>().isOn = lg.completed;
+
+				Image img = panel.GetComponent<Image>();
+				if (lg.completed)
 				{
-					panel.GetComponent<Image>().color = Color.green;
+					img.color = Color.green; new Color(0.8f,0.5f,0.5f);
+					foreach (LevelGoalCondition goalCondition in lg.conditions)
+					{
+						if(ConditionUIConnection.TryGetValue(goalCondition, out panel))
+						{
+							img = panel.GetComponent<Image>();
+							img.color = Color.green;
+						}
+					}
+				}
+				else
+				{
+					img.color = new Color(0.8f,0.5f,0.5f);
 				}
 			}
 		}
@@ -54,11 +68,7 @@ public sealed class MissionOverview : MonoBehaviour {
 		{
 			if(ConditionUIConnection.TryGetValue(lgc, out panel))
 			{
-				panel.transform.GetChild(0).GetComponent<Toggle>().isOn = !lgc.completed;
-				if(lgc.completed)
-				{
-					panel.GetComponent<Image>().color = Color.green;
-				}
+				panel.transform.GetChild(0).GetComponent<Toggle>().isOn = lgc.completed;
 			}
 		}
 	}
